@@ -5,7 +5,7 @@ $t = $text['settings-save-current-files'];
 
 // Save the currently opened files for next time
 if ($_SESSION['loggedIn'] && isset($_GET["saveFiles"]) && $_GET['saveFiles']) {
-	$settingsContents = file_get_contents($settingsFile,false,$context);
+	$settingsContents = getData($settingsFile);
 
 	// Replace our previousFiles var with the the current
 	$repPosStart = strpos($settingsContents,'previousFiles"		=> "')+20;
@@ -57,4 +57,3 @@ if ($_SESSION['loggedIn'] && isset($_GET["saveFiles"]) && $_GET['saveFiles']) {
 	}
 	echo '<script>top.ICEcoder.serverMessage();top.ICEcoder.serverQueue("del",0);</script>';
 }
-?>

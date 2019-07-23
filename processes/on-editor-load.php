@@ -10,7 +10,7 @@ Langs:		Anything - PHP, JS etc
 <script>
 CodeMirror.commands.autocomplete = function(cm) {
 	var langType = top.ICEcoder.caretLocType;
-	if (["JavaScript","CoffeeScript","SQL","CSS","HTML","XML","Content"].indexOf(langType)>-1) {
+	if (["JavaScript","CoffeeScript","TypeScript","SQL","CSS","HTML","XML","Content"].indexOf(langType)>-1) {
 		if (langType=="XML"||langType=="Content") {langType="HTML"};
 		CodeMirror.showHint(cm,CodeMirror.hint[langType.toLowerCase()]);
 	}
@@ -25,39 +25,19 @@ top.ICEcoder.switchMode = function(mode) {
 	fileName = top.ICEcoder.openFiles[top.ICEcoder.selectedTab-1];
 
 	if (cM && mode) {
-		cM.setOption("mode",mode);
-		cMdiff.setOption("mode",mode);
+		if (mode != cM.getOption("mode")) {
+			cM.setOption("mode",mode);
+			cMdiff.setOption("mode",mode);
+		}
 	} else if (cM && fileName) {
-		fileExt = fileName.split(".");
-		fileExt = fileExt[fileExt.length-1];
-		var mode =
-			  fileExt == "js" || fileExt == "json"	? "text/javascript"
-			: fileExt == "coffee"			? "text/x-coffeescript"
-			: fileExt == "rb"			? "text/x-ruby"
-			: fileExt == "py"			? "text/x-python"
-			: fileExt == "css"			? "text/css"
-			: fileExt == "less"			? "text/x-less"
-			: fileExt == "md"			? "text/x-markdown"
-			: fileExt == "xml"			? "application/xml"
-			: fileExt == "sql"			? "text/x-mysql" // also text/x-sql, text/x-mariadb, text/x-cassandra or text/x-plsql
-			: fileExt == "erl"			? "text/x-erlang"
-			: fileExt == "yaml"			? "text/x-yaml"
-			: fileExt == "java"			? "text/x-java"
-			: fileExt == "jl"			? "text/x-julia"
-			: fileExt == "c"			? "text/x-csrc"
-			: fileExt == "cpp"			? "text/x-c++src"
-			: fileExt == "cs"			? "text/x-csharp"
-			: fileExt == "go"			? "text/x-go"
-			: fileExt == "lua"			? "text/x-lua"
-			: fileExt == "pl"			? "text/x-perl"
-			: fileExt == "rs"			? "text/x-rustsrc"
-			: fileExt == "scss"			? "text/x-sass"
-			: "application/x-httpd-php";
+		<?php include(dirname(__FILE__)."/../lib/language-modes-partial.js");?>
 
-		cM.setOption("mode",mode);
-		cM.setOption("lint",(fileExt == "js" || fileExt == "json") && top.ICEcoder.codeAssist ? true : false);
-		cMdiff.setOption("mode",mode);
-		cMdiff.setOption("lint",(fileExt == "js" || fileExt == "json") && top.ICEcoder.codeAssist ? true : false);
+		if (mode != cM.getOption("mode")) {
+			cM.setOption("mode",mode);
+			cM.setOption("lint",(fileExt == "js" || fileExt == "json") && top.ICEcoder.codeAssist ? true : false);
+			cMdiff.setOption("mode",mode);
+			cMdiff.setOption("lint",(fileExt == "js" || fileExt == "json") && top.ICEcoder.codeAssist ? true : false);
+		}
 	}
 }
 
@@ -66,11 +46,12 @@ top.ICEcoder.lineCommentToggleSub = function(cM, cursorPos, linePos, lineContent
 	var comments, startLine, endLine, commentCH, commentBS, commentBE;
 
 	// Language specific commenting
-	if (["JavaScript","CoffeeScript","PHP","Python","Ruby","CSS","SQL","Erlang","Julia","Java","YAML","C","C++","C#","Go","Lua","Perl","Rust","Sass"].indexOf(top.ICEcoder.caretLocType)>-1) {
+	if (["JavaScript","CoffeeScript","TypeScript","PHP","Python","Ruby","CSS","SQL","Erlang","Julia","Java","YAML","C","C++","C#","Go","Lua","Perl","Sass"].indexOf(top.ICEcoder.caretLocType)>-1) {
 
 		comments = {
 			"JavaScript"	: ["// ", "/* ", " */"],
-			"CoffeeScript"	: ["// ", "/* ", " */"],
+			"CoffeeScript"	: ["# ", "### ", " ###"],
+			"TypeScript"	: ["// ", "/* ", " */"],
 			"PHP"		: ["// ", "/* ", " */"],
 			"Python"	: ["# ", "/* ", " */"],
 			"Ruby"		: ["# ", "/* ", " */"],
@@ -86,7 +67,6 @@ top.ICEcoder.lineCommentToggleSub = function(cM, cursorPos, linePos, lineContent
 			"Go"		: ["// ", "/* ", " */"],
 			"Lua"		: ["-- ", "--[[ ", " ]]"],
 			"Perl"		: ["# ", "/* ", " */"],
-			"Rust"		: ["// ", "/* ", " */"],
 			"Sass"		: ["// ", "/* ", " */"]
 		}
 
@@ -114,7 +94,7 @@ top.ICEcoder.lineCommentToggleSub = function(cM, cursorPos, linePos, lineContent
 			}
 		// Single line commenting
 		} else {
-			if (["CoffeeScript","CSS","SQL"].indexOf(top.ICEcoder.caretLocType)>-1) {
+			if (["CSS","SQL"].indexOf(top.ICEcoder.caretLocType)>-1) {
 				cM.replaceRange(lineContent.slice(0,commentBS.length)!=commentBS
 				? commentBS + lineContent + commentBE
 				: lineContent.slice(commentBS.length,lCLen-commentBE.length), {line: linePos, ch: 0}, {line: linePos, ch: 1000000});
@@ -158,7 +138,7 @@ top.ICEcoder.updateNestingIndicator = function() {
 		fileExt = fileName.split(".");
 		fileExt = fileExt[fileExt.length-1];
 	}
-	if (thisCM && fileName && ["js","coffee","css","less","sql","erl","yaml","java","jl","c","cpp","cs","go","lua","pl","rs","scss"].indexOf(fileExt)==-1) {
+	if (thisCM && fileName && ["js","coffee","ts","css","less","sql","erl","yaml","java","jl","c","cpp","ino","cs","go","lua","pl","scss"].indexOf(fileExt)==-1) {
 		testToken = thisCM.getTokenAt({line:thisCM.lineCount(),ch:thisCM.lineInfo(thisCM.lineCount()-1).text.length});
 		nestOK = testToken.type && testToken.type.indexOf("error") == -1 ? true : false;
 	}
@@ -177,8 +157,8 @@ top.ICEcoder.caretLocationType = function() {
 	caretChunk = thisCM.getValue().substr(0,top.ICEcoder.caretPos+1);
 
 	if(caretChunk.lastIndexOf("<script")>caretChunk.lastIndexOf("/script>")&&caretLocType=="Unknown") {caretLocType = "JavaScript";}
-	else if (caretChunk.lastIndexOf("<?")>caretChunk.lastIndexOf("?>")&&caretLocType=="Unknown") {caretLocType = "PHP";}
-	else if (caretChunk.lastIndexOf("<%")>caretChunk.lastIndexOf("%>")&&caretLocType=="Unknown") {caretLocType = "Ruby";}
+	else if (caretChunk.lastIndexOf("<\?")>caretChunk.lastIndexOf("?\>")&&caretLocType=="Unknown") {caretLocType = "PHP";}
+	else if (caretChunk.lastIndexOf("<\%")>caretChunk.lastIndexOf("%\>")&&caretLocType=="Unknown") {caretLocType = "Ruby";}
 	else if (caretChunk.lastIndexOf("<style")>caretChunk.lastIndexOf("/style>")&&caretLocType=="Unknown") {caretLocType = "CSS";}
 	else if (caretChunk.lastIndexOf("<")>caretChunk.lastIndexOf(">")&&caretLocType=="Unknown") {caretLocType = "HTML";}
 	else if (caretLocType=="Unknown") {caretLocType = "Content";};
@@ -190,6 +170,7 @@ top.ICEcoder.caretLocationType = function() {
 		caretLocType =
 			  fileExt == "js"	? "JavaScript"
 			: fileExt == "coffee"	? "CoffeeScript"
+			: fileExt == "ts"	? "TypeScript"
 			: fileExt == "py"	? "Python"
 			: fileExt == "rb"	? "Ruby"
 			: fileExt == "css"	? "CSS"
@@ -203,11 +184,11 @@ top.ICEcoder.caretLocationType = function() {
 			: fileExt == "jl"	? "Julia"
 			: fileExt == "c"	? "C"
 			: fileExt == "cpp"	? "C++"
+			: fileExt == "ino"	? "C++"
 			: fileExt == "cs"	? "C#"
 			: fileExt == "go"	? "Go"
 			: fileExt == "lua"	? "Lua"
 			: fileExt == "pl"	? "Perl"
-			: fileExt == "rs"	? "Rust"
 			: fileExt == "scss"	? "Sass"
 			: "Content";
 	}

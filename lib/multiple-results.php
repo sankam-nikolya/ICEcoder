@@ -15,7 +15,7 @@ if(isset($_GET['selectedFiles'])) {
 <title>ICEcoder <?php echo $ICEcoder["versionNo"];?> multiple results screen</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" type="text/css" href="multiple-results.css">
+<link rel="stylesheet" type="text/css" href="multiple-results.css?microtime=<?php echo microtime(true);?>">
 </head>
 
 <body class="results" onLoad="top.get('loadingMask').style.visibility = 'hidden'">
@@ -44,7 +44,7 @@ var resultsDisplay = "";
 var foundArray = [];
 foundInSelected = false;
 userTarget = top.document.findAndReplace.target.value;
-findText = top.findAndReplace.find.value.toLowerCase();
+findText = top.findAndReplace.find.value;
 <?php
 $findText = str_replace("ICEcoder:","",str_replace("&#39;","\'",$_GET['find']));
 // Find in open docs?
@@ -125,12 +125,12 @@ if (startTab!=top.ICEcoder.selectedTab) {
 			$fullPath = $path.$slash.$f;
 			if(is_dir($fullPath)) {
 				$ret .= phpGrep($q, $fullPath, $base);
-			} else if(stristr(toUTF8noBOM(file_get_contents($fullPath,false,$context),false), $q)) {
+			} else if(stristr(toUTF8noBOM(getData($fullPath),false), $q)) {
 				$bFile = false;
 				$foundInSelFile = false;
 				// Exclude banned files
 				for ($i=0;$i<count($ICEcoder['bannedFiles']);$i++) {
-					if (strpos($f,$ICEcoder['bannedFiles'][$i])!==false) {$bFile = true;};
+					if (strpos($f,str_replace("*","",$ICEcoder['bannedFiles'][$i]))!==false) {$bFile = true;};
 				}
 				// Exclude the folder ICEcoder is running from
 				$rootPrefix = '/'.str_replace("/","\/",preg_quote(str_replace("\\","/",$docRoot))).'/';
@@ -147,7 +147,7 @@ if (startTab!=top.ICEcoder.selectedTab) {
 				}
 				if (!$bFile && (count($selectedFiles)==0 || count($selectedFiles)>0 && $foundInSelFile)) {
 					$ret .= "<a href=\\\"javascript:top.ICEcoder.openFile('".$fullPath."');top.ICEcoder.goFindAfterOpenInt = setInterval(function(){goFindAfterOpen('".$fullPath."')},20);top.ICEcoder.showHide('hide',top.get('blackMask'))\\\">";
-					$ret .= str_replace($base,"",$fullPath)."</a><div id=\\\"foundCount".$r."\\\">".$t['Found']." ".substr_count(strtolower(toUTF8noBOM(file_get_contents($fullPath,false,$context),false)),$q)." ".$t['times']."</div>";
+					$ret .= str_replace($base,"",$fullPath)."</a><div id=\\\"foundCount".$r."\\\">".$t['Found']." ".substr_count(strtolower(toUTF8noBOM(getData($fullPath),false)),$q)." ".$t['times']."</div>";
 					if (isset($_GET['replace'])) {
 						$ret .= "<div class=\\\"replace\\\" id=\\\"replace\\\" onClick=\\\"replaceInFileSingle('".$fullPath."');this.style.display=\'none\'\\\">".$t['replace']."</div>";
 					};

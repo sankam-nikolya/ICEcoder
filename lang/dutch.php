@@ -1,7 +1,7 @@
 <?php
 // Dutch language translation
 // Door: Julian Kaagman
-//	@dutchwaters (GitHub)
+//	@JpaKaagman (GitHub)
 
 // Please preserve formatting, line breaks, special characters, anything in <tags> and HTML equivalents (eg &amp;). Translations on right side.
 // Special chars: http://www.ascii.cl/htmlcodes.htm
@@ -12,7 +12,6 @@ $text = array(
 
 	"editor" =>
 	array(
-		"Click icons for..."		=> "<strong>Klik op de icoontjes<br>voor hulp &amp;<br>gebruiks info</strong>",
 		"server"			=> "server",
 		"Server name, OS..."		=> "Server naam, besturingssysteem & IP:",
 		"Root"				=> "Root:",
@@ -22,6 +21,8 @@ $text = array(
 		"your device"			=> "Uw apparaat",
 		"Browser"			=> "Browser:",
 		"Your IP"			=> "Uw IP:",
+		"trial remaining"		=> "Resterende demo tijd",
+		"days left"			=> "dagen",
 		"files"				=> "bestanden",
 		"Last 10 files..."		=> "Laatste 10 geopende bestanden:",
 		"none"				=> "[none]",
@@ -30,9 +31,7 @@ $text = array(
 		"dev mode"			=> "Ontwikkelaars modus",
 		"Status"			=> "Status",
 		"Using"				=> "Gebruikt",
-		"You can switch..."		=> "U kunt de ontwikkelaars modus aan/uit zetten 
-in lib/config__settings.php",
-		"results"			=> "resultaten"
+		"You can switch..."		=> "U kunt de ontwikkelaars modus aan/uit zetten in lib/config__settings.php",
 
 	),
 
@@ -40,6 +39,7 @@ in lib/config__settings.php",
 	array(
 		"Lock"				=> "Vergrendelen",
 		"Refresh"			=> "Vernieuwen",
+		"Plugins"			=> "Plugins",
 		"ROOT"				=> "[ROOT]"
 
 	),
@@ -51,8 +51,10 @@ in lib/config__settings.php",
 		"Your version is"		=> "Uw versie is",
 		"Update now"			=> "Nu updaten",
 		"You have some..."		=> "Er zijn wijzigingen die niet opgeslagen zijn",
+		"Are you sure..."		=> "Weet u zeker dat u wilt sluiten ?",
 		"working"			=> "bezig",
 		"Color picker"			=> "Kleuren kiezer",
+		"Plugins Manager"		=> "Plugin beheer",
 		"New File"			=> "Nieuw bestand",
 		"New Folder"			=> "Nieuwe map",
 		"Upload File(s)"		=> "Upload bestand(en)",
@@ -67,14 +69,14 @@ in lib/config__settings.php",
 		"Properties"			=> "Eigenschappen",
 		"File"				=> "Bestand",
 		"Edit"				=> "Bewerken",
-		"Remote"			=> "Extern",
+		"Source"			=> "Bron",
 		"Help"				=> "Help",
 		"Save"				=> "Opslaan",
 		"Save As"			=> "Opslaan als",
 		"Live Preview"			=> "Voorbeeld",
 		"Upload"			=> "Upload",
 		"Zip"				=> "Zip",
-		"Print"				=> "Print",
+		"Print"				=> "Afdrukken",
 		"Fullscreen toggle"		=> "Schakelen volledig scherm",
 		"Logout"			=> "Uitloggen",
 		"Undo"				=> "Ongedaan maken",
@@ -85,29 +87,45 @@ in lib/config__settings.php",
 		"Comment/Uncomment"		=> "Commentaar maken",
 		"Jump to Definition"		=> "Spring naar definitie",
 		"Manual"			=> "Handleiding",
-		"Shortcuts"			=> "Snelkoppeling",
+		"Shortcuts"			=> "Sneltoetsen",
 		"Settings"			=> "Opties",
 		"Search for selected"		=> "Zoek naar geselecteerd",
 		"website"			=> "website",
 		"Close all tabs"		=> "Sluit alle tabbladen",
 		"Alphabetize tabs"		=> "Sorteer tabbladen",
-//		"Find"				=> "Zoek",
-//		"in"				=> "in",
-//		"and"				=> "en",
-//		"replace"			=> "vervangen",
-//		"replace all"			=> "alles vervangen",
-//		"this document"			=> "dit document",
-//		"open documents"		=> "open documenten",
-//		"all files"			=> "alle bestanden",
-//		"all filenames"			=> "alle bestandsnamen",
+		"Find"				=> "Zoek",
+		"in"				=> "in",
+		"and"				=> "en",
+		"replace"			=> "vervangen",
+		"replace all"			=> "alles vervangen",
+		"this document"			=> "dit document",
+		"open documents"		=> "open documenten",
+		"all files"			=> "alle bestanden",
+		"all filenames"			=> "alle bestandsnamen",
 		"Turn on/off..."		=> "Schakel codehulp aan/uit",
 		"Code Assist"			=> "Codehulp",
 		"Go to Line"			=> "Ga naar regel",
 		"View"				=> "Beeld",
-		"Bug reporting not active"	=> "Bug rapportage niet actief"
+		"Bug reporting not active"	=> "Bug rapportage niet actief",
+		"Single pane"			=> "Enkel pane",
+		"Diff pane also"		=> "Ook diff pane"
 	),
 
 // /LIB
+
+	"auto-logout-warning" =>
+	array(
+		"Auto Logout Warning"		=> "Auto logout waarschuwing",
+		"You will be..."		=> "U wordt uitgelogd na",
+		"seconds due to..."		=> "seconden ivm inactiviteit, voor veiligheids doeleinden. Gebruik de muis of druk op een toets om door te gaan.<br><br>U kunt deze functie aanpassen of uitschakelen in Bewerken > Opties."
+	),
+
+	"backup-versions" =>
+	array(
+		"backup"			=> "backup",
+		"backups"			=> "backups",
+		"available for"			=> "beschikbaar voor"
+	),
 
 	"bug-files-check" =>
 	array(
@@ -116,32 +134,34 @@ in lib/config__settings.php",
 
 	"file-control" =>
 	array(
+		"Sorry, bad filename..."	=> "Er is een ongeldige bestandsnaam opgegeven. Bekijk de dev tools console voor meer informatie.",
 		"Sorry"				=> "Sorry",
 		"does not seem..."		=> "bestaat niet op de server",
-		"Sorry, could not..."		=> "Sorry, kan geen gegevens ophalen van",
-		"Sorry, cannot create..."	=> "Sorry, kan geen map aanmaken op",
-		"Sorry, cannot copy"		=> "Sorry, kan niet het volgende niet kopi&euml;ren",
+		"Sorry, could not..."		=> "Het is niet mogelijk om de gegevens op te halen van",
+		"Sorry, cannot create..."	=> "Er kan geen map worden aangemaakt op",
+		"Sorry, cannot copy"		=> "Kan niet worden gekopie&euml;rd",
 		"into"				=> "naar",
 		"Uploaded file(s) OK"		=> "Ge&uuml;ploade bestand(en)",
-		"Sorry, cannot upload"		=> "Sorry, kan niet uploaden",
-		"Sorry, cannot upload..."	=> "Sorry, kan niet uploaden in de demo modus",
-		"Sorry, cannot rename"		=> "Sorry, kan niet hernoemen",
+		"Sorry, cannot upload"		=> "Kan niet uploaden",
+		"Sorry, cannot upload..."	=> "Kan niet uploaden in de demo modus",
+		"Sorry, cannot rename"		=> "Kan niet hernoemen",
 		"Maybe public write..."		=> "Misschien zijn er publieke schrijfrechten nodig voor deze, of de bovenliggende map?",
-		"Sorry, cannot move"		=> "Sorry, kan niet worden verplaatst",
-		"Sorry, cannot save"		=> "Sorry, kan niet opslaan",
-		"Sorry, cannot replace..."	=> "Sorry, Kan geen tekst vervangen in",
-		"Sorry, cannot change..."	=> "Sorry, kan de rechten niet wijzigen voor",
-		"Sorry, cannot delete..."	=> "Sorry, kan de root level niet verwijderen",
-		"Sorry, cannot delete"		=> "Sorry, kan niet verwijderd worden",
-		"Sorry, this file..."		=> "Sorry, het bestand is gewijzigd, maar kan niet worden opgeslagen",
+		"Sorry, cannot move"		=> "Kan niet worden verplaatst",
+		"Sorry, cannot save"		=> "Kan niet opslaan",
+		"Sorry, cannot replace..."	=> "Kan geen tekst vervangen in",
+		"Sorry, cannot change..."	=> "Kan de rechten niet wijzigen voor",
+		"Sorry, cannot delete more..."	=> "U kunt niet meer dan een bestand tegelijkertijd verwijderen in FTP modus",
+		"Sorry, cannot delete..."	=> "Kan de root level niet verwijderen",
+		"Sorry, cannot delete"		=> "Kan niet verwijderd worden",
+		"Sorry, this file..."		=> "Het bestand is gewijzigd, maar kan niet worden opgeslagen",
 		"Reload this file..."		=> "Vernieuw dit bestand en kopieer de huidige versie naar een nieuw bestand?",
 		"There was a..."		=> "Er was een technisch probleem, mogelijk was er iets niet gereed. ICEcodeer heeft bestandsbeheer opnieuw geladen.",
 		"displayed at"			=> "weergegeven op",
 		"Enter filename to..."		=> "Voer een bestandsnaam in om het op te slaan op",
 		"That file exists..."		=> "Dit bestand bestaat al, overschrijven?",
 		"Saving"			=> "Opslaan"
-	),	
-	
+	),
+
 	"get-branch" =>
 	array(
 		"There are no..."		=> "Er zijn geen verschillen aangetroffen tussen de lokale en de Github repo. Wilt u terug schakelen naar de normale modus?",
@@ -158,7 +178,9 @@ in lib/config__settings.php",
 		"github paths"			=> "Github paden",
 		"Choose existing path"		=> "Kies een bestaand pad",
 		"Local path"			=> "Lokaal pad",
+		"Slash prefixed"		=> "Slash prefix",
 		"Remote GitHub path"		=> "Extern Github pad",
+		"Absolute URL beginning..."	=> "Absolute link, beginnend met https://github.com",
 		"Choose"			=> "Kies",
 		"Set local and..."		=> "Maak het lokale en externe pad leeg, om te verwijderen",
 		"Update"			=> "Update",
@@ -168,12 +190,12 @@ in lib/config__settings.php",
 		"Enter relative local..."	=> "Voer relatieve lokale paden (bv /server/mijnbestanden) en absolute Github paden (bv https://github.com/user/repo of https://github.com/user/repo/tree/branch voor vertakkingen (branches)), zoals het voorbeeld. Als je dit doet worden de bron paden op beide locaties gevestigd als een paar.",
 		"You can then..."		=> "You can then choose a path pair and this then becomes your new root path in ICEcoder.",
 		"The file manager..."		=> "The file manager then displays a new GitHub icon, which you can click on to perform and show a diff check between the 2 sources. These diffs can then be committed and pushed to the remote path at GitHub or cloned to your local path, to sync your files.",
-		"If you want..."		=> "If you want to set another root path, this can be done in the Settings screen."
+		"If you want..."		=> "Als je een ander root pad wilt instellen kan je dit doen in Bewerken > Opties."
 	),
 
 	"github" =>
 	array(
-		"Sorry, you do..."		=> "Sorry, you do not appear to have OpenSSL loaded on your PHP instance, so https is not available. This is required for GitHub data transfer, please amend php.ini settings, restart your server and try again"
+		"Sorry, you do..."		=> "Sorry, het lijkt erop dat U OpenSSL niet beschikbaar heeft op uw server, https is dus niet beschikbaar. Dit is nodig voor GitHub gegevensoverdracht. Wijzig uw php.ini instellingen en herstart uw server en probeer opnieuw."
 	),
 
 	"headers" =>
@@ -183,7 +205,7 @@ in lib/config__settings.php",
 
 	"help" =>
 	array(
-		"shortcuts"			=> "snelkoppelingen",
+		"shortcuts"			=> "Sneltoetsen",
 		"Within document"		=> "Binnen het document",
 		"On Tabs"			=> "Op Tabs",
 		"Within file manager"		=> "Binnen bestandsbeheer",
@@ -209,6 +231,8 @@ in lib/config__settings.php",
 		"Jump to definition"		=> "Spring naar definitie / spring terug",
 		"Comment uncomment"		=> "Commentaar (ongedaan) maken",
 		"Insert tab indent"		=> "Invoegen tab / verspringen geselecteerd",
+		"Insert more"			=> "Inspringen verruimen",
+		"Insert less"			=> "Inspringen verkleinen",
 		"Wrap with div"			=> "Omhullen met &lt;div&gt;",
 		"Wrap with span"		=> "Omhullen met &lt;span&gt;",
 		"Wrap unwrap p"			=> "Omhullen / onthullen met &lt;p&gt;",
@@ -233,6 +257,7 @@ in lib/config__settings.php",
 		"Close current tab"		=> "Sluit huidige tab",
 		"Open file prompt"		=> "Open bestands prompt",
 		"Find"				=> "Zoek",
+		"Previous"			=> "Vorige",
 		"Focus on Go..."		=> "Focus op ga naar regel invoer",
 		"Save"				=> "Opslaan",
 		"Save as"			=> "Opslaan als...",
@@ -245,12 +270,18 @@ in lib/config__settings.php",
 
 	"ice-coder" =>
 	array(
+		"results"			=> "resultaten",
 		"No text selected..."		=> "Geen tekst geselecteerd om te zoeken",
+		"all files"			=> "alle bestanden",
+		"all filenames"			=> "alle bestandsnamen",
+		"selected files"		=> "geselecteerde bestanden",
+		"selected filenames"		=> "geselecteerde bestandsnamaen",
 		"Creating Folder"		=> "Aanmaken map",
 		"Sorry you can..."		=> "Sorry, je kan maximaal 100 bestanden open hebben staan!",
 		"Opening File"			=> "Openen bestand",
 		"Enter relative file..."	=> "Geef relatieve bestands pad (voorafgaand door een slash) of een externe URL",
 		"Getting"			=> "Ophalen",
+		"Saving"			=> "Opslaan:",
 		"Please enter the..."		=> "Voer de nieuwe naam in voor",
 		"Renaming to"			=> "Hernoemen naar",
 		"Moving to"			=> "Verplaatsen naar",
@@ -258,13 +289,19 @@ in lib/config__settings.php",
 		"Pasting File"			=> "Bestand plakken",
 		"Sorry cannot paste..."		=> "Sorry, kan niet de gehele root plakken",
 		"Nothing to paste..."		=> "Er is niets om te plakken, kopieer eerst een bestand of map!",
+		"and"				=> "en",
+		"this document"			=> "dit bestand",
+		"replace"			=> "vervang",
+		"replace all"			=> "vervang alle",
+		"file"				=> "bestand",
 		"Replacing text in"		=> "Wijzig de tekst in",
+		"Sorry there was..."		=> "Helaas er is een fout opgetreden met uw aanvraag.\\n\\nKijk in de dev tools console voor meer informatie.",
 		"Cancelled tasks"		=> "Geannuleerde taken",
 		"Open previous files"		=> "Open voorgaande bestand(en)?",
-		"Please enter your..."		=> "Please enter your GitHub token (either personal access token or client/secret pair token). See tooltip next to Github Auth Token on Help > Settings screen for more info",
-		"This will compare..."		=> "This will compare and show a diff view between your local dir and the repo. OK?",
+		"Please enter your..."		=> "Voer alstublieft uw GitHub token (personal access token of client/secret pair token). Zie ook de tooltip bij Github Auth Token binnen Bewerken > Opties voor meer informatie.",
+		"This will compare..."		=> "Er zullen vergelijkingen en veranderingen worden getoond tussen uw lokale map en de repo. Ok?",
 		"Please note for..."		=> "Let op: om de update goed te laten doorvoeren, moet je schrijfrechten hebben op alle bestanden en mappen van ICEcoder. Moet je deze versie van ICEcoder herstellen, dan vind je die in de map /tmp. Klik op ok om door te gaan met automatisch updaten, of druk op annuleren om af te breken. Voor een handmatige update kun je het zip bestand van de ICEcoder website downloaden.",
-		"You can start..."		=> "U kunt bug rapporteren aanzetten in: Help > Settings",
+		"You can start..."		=> "U kunt bug rapporteren aanzetten in: Bewerken > Opties",
 		"Error cannot find..."		=> "Fout: kan geen toegang krijgen of de bestands paden vinden",
 		"No new errors..."		=> "Geen nieuwe fouten gevonden",
 		"You have made..."		=> "Er zijn wijzigingen aangetroffen. Wilt u verder gaan zonder op te slaan?",
@@ -277,16 +314,17 @@ in lib/config__settings.php",
 		"login"				=> "login",
 		"To disable registration..."	=> "Om de registratie modus uit te zetten, open het menu opties of open lib/config___settings.php en wijzig enableRegistration naar false",
 		"Registration mode enabled"	=> "Registratie modus aan",
+		"disable further registrations"	=> "uitschakelen van verdere registraties",
 		"auto-check for updates"	=> "automatisch controleren op updates",
 		"To put into..."		=> "Om de multi-user modus te gebruiken, open het menu opties of open lib/config___settings.php en verander multiUser naar true",
 		"multi-user"			=> "multi-user"
-),
+	),
 
 	"multiple-results" =>
 	array(
 		"rename all"			=> "hernoem alles",
 		"replace all"			=> "vervang alles",
-		"document"			=> "document",
+		"document"			=> "bestand",
 		"Found"				=> "Gevonden",
 		"times"				=> "keer",
 		"replace"			=> "vervang",
@@ -359,14 +397,20 @@ in lib/config__settings.php",
 		"version"			=> "versie",
 		"website"			=> "website",
 		"git"				=> "git",
-		"codemirror dir"		=> "codemirror dir",
+		"codemirror dir"		=> "codemirror map",
 		"codemirror version"		=> "codemirror versie",
 		"file manager root"		=> "bestandsbeheer root",
-		"Free to use..."		=> "Vrij voor eigen gebruik, commercieel of persoonlijk. :)<br><br>Wij zijn niet aansprakelijk en bieden geen garantie, gebruik op eigen risico.<br><br>Een hoop fantastische mensen, en bedrijven hebben meegeholpen aan de ontwikkeling van ICEcoder waarvoor bedankt. Zie wie er allemaal heeft bijgedragen op",
+		"backups"			=> "backups",
+		"keep version control..."	=> "gebruik versiebeheer backups voor",
+		"day"				=> "dag",
+		"days"				=> "dagen",
+		"of backups stored..."		=> "of backups stored currently",
+		"Get in contact..."		=> "Kom in contact via...",
+		"You may use..."		=> "Vrij voor eigen gebruik, commercieel of persoonlijk. Laat het ons weten als je toffe aanpassingen maakt :)<br><br>Wij zijn niet aansprakelijk en bieden geen garantie, gebruik op eigen risico.",
 		"functionality"			=> "functionaliteit",
 		"check for updates..."		=> "check voor updates bij laden",
 		"auto open last..."		=> "automatisch openen laatst geopende bestanden na inloggen",
-		"when finding in..."		=> "when finding in files, exclude",
+		"when finding in..."		=> "Uitgesloten bestand typen",
 		"assisting"			=> "assisteren",
 		"code assist"			=> "codehulp",
 		"visible tabs"			=> "zichtbare tabs",
@@ -380,18 +424,27 @@ in lib/config__settings.php",
 		"banned files/folders"		=> "uitgesloten bestanden/mappen",
 		"banned paths"			=> "uitgesloten paden",
 		"ip addresses"			=> "ip adressen",
+		"auto-logout after"		=> "auto-logout na",
+		"mins of inactivity..."		=> "minuten in actief, tenzij er niet opgeslagen bestanden geopend zijn",
 		"Slash prefixed comma..."	=> "Slash prefixed, komma gescheiden",
 		"Comma delimited"		=> "komma gescheiden",
 		"style"				=> "style",
 		"theme"				=> "thema",
 		"line wrapping"			=> "regel omslag",
+		"line numbers"			=> "regel nummers",
 		"indent type"			=> "inspring type",
 		"indent size"			=> "inspring size",
+		"match brackets"		=> "match brackets",
+		"show trailing space"		=> "show trailing space",
 		"font size"			=> "lettergrootte",
+		"auto indent"			=> "automatisch inspringen",
+		"auto close tags"		=> "automatisch tags sluiten",
+		"auto close brackets"		=> "automatsich brackets sluiten",
 		"layout"			=> "lay-out",
 		"plugin panel aligned"		=> "plug-in paneel positie",
 		"file manager"			=> "bestandsbeheer",
 		"root"				=> "root",
+		"Set 0 to..."			=> "Set 0 to disable",
 		"Slash prefixed"		=> "Slash prefixed",
 		"bug reporting"			=> "bug rapportage",
 		"check in files"		=> "check in bestanden",
@@ -420,8 +473,20 @@ in lib/config__settings.php",
 
 	"updater" =>
 	array(
-		"Update appears to..."		=> "Update lijkt succesvol te zijn verlopen"
+		"Update appears to..."		=> "Update succesvol uitgevoerd!"
+	),
+    
+	"find-in-files" =>
+	array(
+		"Enter path to search in" => "Voer het door te zoeken pad in",
+		"Enter semicolon-separated masks of files to look at (e.g. *.php;*.html;*.js)" => "Voer de te zoeken bestandstypen in, en scheid deze met een puntcomma (bijvoorbeeld: *.php;*.html;*.js)",
+		"Type of text" => "Type tekst",
+		"Fixed text" => "Fixed tekst",
+		"Regular expression" => "Reguliere expressie",
+		"Case sensitive" => "Hoofdletter gevoelig",
+		"Yes" => "Ja",
+		"No" => "Nee",
+		"Search" => "Zoek",
 	)
-
 );
-?>
+

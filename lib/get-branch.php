@@ -2,6 +2,7 @@
 if (!isset($ICEcoder['root'])) {
 	include("headers.php");
 	include("settings.php");
+	include("ftp-control.php");
 }
 
 if (!$_SESSION['loggedIn']) {
@@ -19,14 +20,14 @@ $t = $text['get-branch'];
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="robots" content="noindex, nofollow">
 <?php if ($_SESSION['githubDiff']) { ?>
-<script src="github.js"></script>
+<script src="github.js?microtime=<?php echo microtime(true);?>"></script>
 <?php ;}; ?>
 </head>
 
 <body>
 <?php
 // Need to get dir contents recursively? (Used by GitHub diff mode)
-if ($_SESSION['githubDiff']) {
+if (!isset($ftpSite) && $_SESSION['githubDiff']) {
 	// Function to sort given values alphabetically
 	function alphasort($a, $b) {
 		return strcmp($a->getPathname(), $b->getPathname());
@@ -70,8 +71,8 @@ if ($_SESSION['githubDiff']) {
 		if (is_dir($scanpath) && strpos($scanpath,".git") == false) {
 		$thisDir = str_replace("\\","/",$scanpath);
 			if(hasGitignore($thisDir)) {
-			$gi[] = $thisDir."/.gitignore";
-		}
+				$gi[] = $thisDir."/.gitignore";
+			}
 		}
 	}
 
@@ -116,23 +117,52 @@ if ($_SESSION['githubDiff']) {
 $scanDir = $docRoot.$iceRoot;
 $location = "";
 echo '<div id="branch" style="display: none">';
-$location = str_replace("|","/",$_GET['location']);
+$location = str_replace("|","/",xssClean($_GET['location'],"html"));
 if ($location=="/") {$location = "";};
 
 $dirArray = $filesArray = $finalArray = array();
-$finalArray = scanDir($scanDir.$location);
+
+// Get dir/file list over FTP
+if (isset($ftpSite)) {
+	ftpStart();
+	// Show user warning if no good connection
+	if (!$ftpConn || !$ftpLogin) {
+		die('<script>top.ICEcoder.message("Sorry, no FTP connection to '.$ftpHost.' for user '.$ftpUser.'");</script>');
+		exit;
+	}
+	// Get our simple and detailed lists and close the FTP connection
+	$ftpList = ftpGetList($ftpConn, $ftpRoot.$location);
+	$finalArray = $ftpList['simpleList'];
+	$ftpItems = $ftpList['detailedList'];
+	ftpEnd();
+// or get local list
+} else {
+	$finalArray = scanDir($scanDir.$location);
+}
+
 foreach($finalArray as $entry) {
 	$canAdd = true;
 	for ($i=0;$i<count($_SESSION['bannedFiles']);$i++) {
-		if($_SESSION['bannedFiles'][$i] != "" && strpos($entry,$_SESSION['bannedFiles'][$i])!==false) {$canAdd = false;}
+		if(str_replace("*","",$_SESSION['bannedFiles'][$i]) != "" && strpos($entry,str_replace("*","",$_SESSION['bannedFiles'][$i]))!==false) {$canAdd = false;}
 	}
-	if ("/".$entry == $ICEcoderDir) {
+	// Only applicable for local dir, ignoring ICEcoder's dir
+	if (!isset($ftpSite) && $docRoot.$iceRoot.$location."/".$entry == $docRoot.$ICEcoderDir) {
+		$canAdd = false;
+	}
+	// Ignore .git dir in GitHub diff mode
+	if (!isset($ftpSite) && $_SESSION['githubDiff'] && strpos($docRoot.$iceRoot.$location."/".$entry,"/.git") !== false) {
 		$canAdd = false;
 	}
 	if ($entry != "." && $entry != ".." && $canAdd) {
-		is_dir($docRoot.$iceRoot.$location."/".$entry)
-		? array_push($dirArray,$location."/".$entry)
-		: array_push($filesArray,$location."/".$entry);
+		if (!isset($ftpSite)) {
+			is_dir($docRoot.$iceRoot.$location."/".$entry)
+			? array_push($dirArray,$location."/".$entry)
+			: array_push($filesArray,$location."/".$entry);
+		} else {
+			$ftpItems[$entry]['type'] == "directory"
+			? array_push($dirArray,$location."/".$entry)
+			: array_push($filesArray,$location."/".$entry);
+		}
 	}
 }
 natcasesort($dirArray);
@@ -141,7 +171,11 @@ natcasesort($filesArray);
 $finalArray = array_merge($dirArray,$filesArray);
 for ($i=0;$i<count($finalArray);$i++) {
 	$fileFolderName = str_replace("\\","/",$finalArray[$i]);
-	$type = is_dir($docRoot.$iceRoot.$fileFolderName) ? "folder" : "file";
+	if (!isset($ftpSite)) {
+		$type = is_dir($docRoot.$iceRoot.$fileFolderName) ? "folder" : "file";
+	} else {
+		$type = $ftpItems[basename($fileFolderName)]['type'] == "directory" ? "folder" : "file";
+	}
 	if ($type=="file") {
 		// Get extension (prefix 'ext-' to prevent invalid classes from extensions that begin with numbers)
 		$ext = "ext-".pathinfo($docRoot.$iceRoot.$fileFolderName, PATHINFO_EXTENSION);
@@ -152,8 +186,34 @@ for ($i=0;$i<count($finalArray);$i++) {
 	}
 	$type == "folder" ? $class = 'pft-directory' : $class = 'pft-file '.strtolower($ext);
 	$loadParam = $type == "folder" ? "true" : "false";
-	echo "<li class=\"".$class."\" draggable=\"false\" ondrag=\"top.ICEcoder.draggingWithKeyTest(event);if(top.ICEcoder.getcMInstance()){top.ICEcoder.editorFocusInstance.indexOf('diff') == -1 ? top.ICEcoder.getcMInstance().focus() : top.ICEcoder.getcMdiffInstance().focus()}\" ondragend=\"top.ICEcoder.dropFile(this)\"><a nohref title=\"$fileFolderName\" onMouseOver=\"parentNode.draggable=true;top.ICEcoder.overFileFolder('$type',this.childNodes[1].id)\" onMouseOut=\"parentNode.draggable=false;top.ICEcoder.overFileFolder('$type','')\" ondragover=\"if(parentNode.nextSibling && parentNode.nextSibling.tagName != 'UL' && top.ICEcoder.thisFileFolderLink != this.childNodes[1].id) {top.ICEcoder.openCloseDir(this,true);}\" onClick=\"if(!event.ctrlKey && !top.ICEcoder.cmdKey) {top.ICEcoder.openCloseDir(this,$loadParam); if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {top.ICEcoder.openFile()}}\" style=\"position: relative; left:-22px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id=\"".str_replace($docRoot,"",str_replace("/","|",$fileFolderName))."\">".xssClean(basename($fileFolderName),"html")."</span> ";
-	$thisPermVal = $serverType=="Linux" ? substr(sprintf('%o', fileperms($docRoot.$iceRoot.$fileFolderName)), -3) : '';
+	echo "<li class=\"".$class."\" draggable=\"false\" ondragstart=\"top.ICEcoder.addDefaultDragData(this,event)\" ondrag=\"top.ICEcoder.draggingWithKeyTest(event);if(top.ICEcoder.getcMInstance()){top.ICEcoder.editorFocusInstance.indexOf('diff') == -1 ? top.ICEcoder.getcMInstance().focus() : top.ICEcoder.getcMdiffInstance().focus()}\" ondragover=\"top.ICEcoder.setDragCursor(event,".($type == "folder" ? "'folder'" : "'file'").")\" ondragend=\"top.ICEcoder.dropFile(this)\"><a nohref title=\"$fileFolderName\" onMouseOver=\"parentNode.draggable=true;top.ICEcoder.overFileFolder('$type',this.childNodes[1].id)\" onMouseOut=\"parentNode.draggable=false;top.ICEcoder.overFileFolder('$type','')\" ".
+
+	(($type == "folder")?"ondragover=\"if(parentNode.nextSibling && parentNode.nextSibling.tagName != 'UL' && top.ICEcoder.thisFileFolderLink != this.childNodes[1].id) {top.ICEcoder.openCloseDir(this,true);}\"":"").
+
+	" onClick=\"if(!event.ctrlKey && !top.ICEcoder.cmdKey) {".
+
+	(($type == "folder")?" top.ICEcoder.openCloseDir(this,$loadParam);":"").
+
+	" if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {top.ICEcoder.openFile()}}\" style=\"position: relative; left:-22px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id=\"".str_replace($docRoot,"",str_replace("/","|",$fileFolderName))."\">".xssClean(basename($fileFolderName),"html")."</span> ";
+	if (!isset($ftpSite)) {
+		$thisPermVal = $serverType=="Linux" ? substr(sprintf('%o', fileperms($docRoot.$iceRoot.$fileFolderName)), -3) : '';
+	} else {
+		// Work out perms value
+		$thisPermVal = 0;
+		$r = $ftpItems[basename($fileFolderName)]['rights'];
+		// Owner
+		$thisPermVal += substr($r,1,1) == "r" ? 400 : 0;
+		$thisPermVal += substr($r,2,1) == "w" ? 200 : 0;
+		$thisPermVal += substr($r,3,1) == "x" ? 100 : 0;
+		// Group
+		$thisPermVal += substr($r,4,1) == "r" ? 40 : 0;
+		$thisPermVal += substr($r,5,1) == "w" ? 20 : 0;
+		$thisPermVal += substr($r,6,1) == "x" ? 10 : 0;
+		// Public
+		$thisPermVal += substr($r,7,1) == "r" ? 4 : 0;
+		$thisPermVal += substr($r,8,1) == "w" ? 2 : 0;
+		$thisPermVal += substr($r,9,1) == "x" ? 1 : 0;
+	}
 	$permColors = $thisPermVal == 777 ? 'background: #800; color: #eee' : 'color: #888';
 	echo '<span style="'.$permColors.'; font-size: 8px" id="'.str_replace($docRoot,"",str_replace("/","|",$fileFolderName)).'_perms">';
 	echo $thisPermVal;
@@ -162,7 +222,7 @@ for ($i=0;$i<count($finalArray);$i++) {
 
 echo '	</div>';
 
-if ($_SESSION['githubDiff']) {
+if (!isset($ftpSite) && $_SESSION['githubDiff']) {
 	// Show the loading screen until we're done comparing files with GitHub
 	echo "<script>setTimeout(function(){top.ICEcoder.showHide('show',top.get('loadingMask'));},4)</script>";
 	$i=0;
@@ -174,7 +234,7 @@ if ($_SESSION['githubDiff']) {
 		// If we're not looking at a .git dir, it's not a .gitignore excluded path and not a dir
 		if (strpos($fileFolderName,".git/") == false && !in_array($docRoot.$iceRoot.$fileFolderName, $excluded) && !is_dir($docRoot.$iceRoot.$fileFolderName)) {
 			// Get contents of file
-			$contents = file_get_contents($docRoot.$iceRoot.$fileFolderName);
+			$contents = getData($docRoot.$iceRoot.$fileFolderName);
 
 			$finfo = "text";
 			// Determine if we should remove \r line endings based on mime type (text files yes, others no)
@@ -188,7 +248,7 @@ if ($_SESSION['githubDiff']) {
 				if (array_search($fileExt,array("gif","jpg","jpeg","png"))!==false) {$finfo = "image";};
 				if (array_search($fileExt,array("doc","docx","ppt","rtf","pdf","zip","tar","gz","swf","asx","asf","midi","mp3","wav","aiff","mov","qt","wmv","mp4","odt","odg","odp"))!==false) {$finfo = "other";};
 			}
-			if (strpos($finfo,"text")===0 || strpos($finfo,"empty")!==false) {
+			if (strpos($finfo,"text")===0 || strpos($finfo, "application/xml")===0 || strpos($finfo,"empty")!==false) {
 				$contents = str_replace("\r","",$contents);
 			};
 			// Establish the blob SHA contents and push name, SHA and type into 3 arrays
@@ -317,7 +377,7 @@ if ($_SESSION['githubDiff']) {
 }
 ?>
 	<script>
-	targetElem = top.ICEcoder.filesFrame.contentWindow.document.getElementById('<?php echo $_GET['location'];?>');
+	targetElem = top.ICEcoder.filesFrame.contentWindow.document.getElementById('<?php echo xssClean($_GET['location'],"html");?>');
 	newUL = document.createElement("ul");
 	newUL.style = "display: block";
 	locNest = targetElem.parentNode.parentNode;
@@ -332,7 +392,7 @@ if ($_SESSION['githubDiff']) {
 		// Now display folders & files
 
 		// Animate into view?
-		if (folderItems.length <= 50) {
+		if (<?php echo !$_SESSION['githubDiff'] ? "true" : "false";?> && folderItems.length <= 50) {
 			showFileI=0;
 			animFolders = setInterval(function() {
 				showFileI++;
@@ -401,7 +461,7 @@ if ($_SESSION['githubDiff']) {
 
 	// If we're not in githubDiff mode, show files here
 	if (folderContent.indexOf('<ul')>-1 || folderContent.indexOf('<li')>-1) {
-		<?php if (!$_SESSION['githubDiff']) {echo 'showFiles();';};?>
+		<?php if (isset($ftpSite) || !$_SESSION['githubDiff']) {echo 'showFiles();';};?>
 	} else {
 		<?php
 		$iceGithubLocalPaths = $ICEcoder["githubLocalPaths"];

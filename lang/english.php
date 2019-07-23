@@ -11,7 +11,6 @@ $text = array(
 
 	"editor" =>
 	array(
-		"Click icons for..."		=> "<b>Click icons<br>for help &amp;<br>usage info</b>",
 		"server"			=> "server",
 		"Server name, OS..."		=> "Server name, OS & IP:",
 		"Root"				=> "Root:",
@@ -21,6 +20,8 @@ $text = array(
 		"your device"			=> "your device",
 		"Browser"			=> "Browser:",
 		"Your IP"			=> "Your IP:",
+		"trial remaining"		=> "trial remaining",
+		"days left"			=> "days left",
 		"files"				=> "files",
 		"Last 10 files..."		=> "Last 10 files opened:",
 		"none"				=> "[none]",
@@ -37,6 +38,7 @@ $text = array(
 	array(
 		"Lock"				=> "Lock",
 		"Refresh"			=> "Refresh",
+		"Plugins"			=> "Plugins",
 		"ROOT"				=> "[ROOT]"
 
 	),
@@ -48,8 +50,10 @@ $text = array(
 		"Your version is"		=> "Your version is",
 		"Update now"			=> "Update now",
 		"You have some..."		=> "You have some unsaved changes",
+		"Are you sure..."		=> "Are you sure you want to close?",
 		"working"			=> "working",
 		"Color picker"			=> "Color picker",
+		"Plugins Manager"		=> "Plugins Manager",
 		"New File"			=> "New File",
 		"New Folder"			=> "New Folder",
 		"Upload File(s)"		=> "Upload File(s)",
@@ -101,10 +105,26 @@ $text = array(
 		"Code Assist"			=> "Code Assist",
 		"Go to Line"			=> "Go to Line",
 		"View"				=> "View",
-		"Bug reporting not active"	=> "Bug reporting not active"
+		"Bug reporting not active"	=> "Bug reporting not active",
+		"Single pane"			=> "Single pane",
+		"Diff pane also"		=> "Diff pane also"
 	),
 
 // /LIB
+
+	"auto-logout-warning" =>
+	array(
+		"Auto Logout Warning"		=> "Auto logout warning",
+		"You will be..."		=> "You will be logged out after",
+		"seconds due to..."		=> "seconds due to inactivity, for security purposes. Use the mouse or hit a key to continue.<br><br>You can adjust or disable this from the Edit > Settings section."
+	),
+
+	"backup-versions" =>
+	array(
+		"backup"			=> "backup",
+		"backups"			=> "backups",
+		"available for"			=> "available for"
+	),
 
 	"bug-files-check" =>
 	array(
@@ -113,6 +133,7 @@ $text = array(
 
 	"file-control" =>
 	array(
+		"Sorry, bad filename..."	=> "Sorry, bad filename provided. Check the dev tools console for more info?",
 		"Sorry"				=> "Sorry",
 		"does not seem..."		=> "does not seem to exist on the server",
 		"Sorry, could not..."		=> "Sorry, could not get contents of",
@@ -128,15 +149,47 @@ $text = array(
 		"Sorry, cannot save"		=> "Sorry, cannot save",
 		"Sorry, cannot replace..."	=> "Sorry, cannot replace text in",
 		"Sorry, cannot change..."	=> "Sorry, cannot change permissions on",
+		"Sorry, cannot delete more..."	=> "Sorry, cannot delete more then one item at a time under FTP mode",
 		"Sorry, cannot delete..."	=> "Sorry, cannot delete the root level",
 		"Sorry, cannot delete"		=> "Sorry, cannot delete",
-		"Sorry, this file..."		=> "Sorry, this file has changed, cannot save",
-		"Reload this file..."		=> "Reload this file and copy your version to a diff pane?",
+		"Sorry, this file..."		=> "Sorry, this file has changed outside of ICEcoder, cannot save",
+		"Reload this file..."		=> "Reload this file and copy your version to a diff pane?\\\\n(left side = file from server, right side = unsaved file)",
 		"There was a..."		=> "There was a tech hiccup, likely something was not quite ready. So ICEcoder reloaded its file control again.",
 		"displayed at"			=> "displayed at",
 		"Enter filename to..."		=> "Enter filename to save at",
 		"That file exists..."		=> "That file exists already, overwrite?",
 		"Saving"			=> "Saving"
+	),
+
+	"ftp-manager" =>
+	array(
+		"Saving FTP sites"		=> "Saving FTP sites",
+		"Cannot update config..."	=> "Cannot update config file. Please set public write permissions on",
+		"and try again"			=> "and try again",
+		"ftp manager"			=> "ftp manager",
+		"Choose existing site"		=> "Choose existing site",
+		"Are you sure..."		=> "Are you sure you wish to remove this site?",
+		"Add new site"			=> "Add new site",
+		"Edit site"			=> "Edit site",
+		"Site base"			=> "Site base",
+		"Host"				=> "Host",
+		"Username"			=> "Username",
+		"Password"			=> "Password",
+		"PASV and mode"			=> "PASV and mode",
+		"Root"				=> "Root",
+		"eg http://yourdomain.com"	=> "eg http://yourdomain.com",
+		"eg ftp.yourdomain.com"		=> "eg ftp.yourdomain.com",
+		"eg user123"			=> "eg user123",
+		"eg pass123"			=> "eg pass123",
+		"Use PASV mode..."		=> "Use PASV mode if your FTP site requires it and choose the data transfer type - ASCII or binary",
+		"eg /htdocs"			=> "eg /htdocs",
+		"PASV connection off"		=> "PASV connection off",
+		"PASV connection on"		=> "PASV connection on",
+		"ASCII transfer"		=> "ASCII transfer",
+		"Binary transfer"		=> "Binary transfer",
+		"Add"				=> "Add",
+		"Choose"			=> "Choose",
+		"Update"			=> "Update"
 	),
 
 	"get-branch" =>
@@ -155,7 +208,9 @@ $text = array(
 		"github paths"			=> "github paths",
 		"Choose existing path"		=> "Choose existing path",
 		"Local path"			=> "Local path",
+		"Slash prefixed"		=> "Slash prefixed",
 		"Remote GitHub path"		=> "Remote GitHub path",
+		"Absolute URL beginning..."	=> "Absolute URL, beginning https://github.com",
 		"Choose"			=> "Choose",
 		"Set local and..."		=> "Set local and remote path to blank to remove",
 		"Update"			=> "Update",
@@ -232,6 +287,7 @@ $text = array(
 		"Close current tab"		=> "Close current tab",
 		"Open file prompt"		=> "Open file prompt",
 		"Find"				=> "Find",
+		"Previous"			=> "Previous",
 		"Focus on Go..."		=> "Focus on Go to line input",
 		"Save"				=> "Save",
 		"Save as"			=> "Save as...",
@@ -244,6 +300,7 @@ $text = array(
 
 	"ice-coder" =>
 	array(
+		"results"			=> "results",
 		"No text selected..."		=> "No text selected to search on",
 		"all files"			=> "all files",
 		"all filenames"			=> "all filenames",
@@ -252,8 +309,9 @@ $text = array(
 		"Creating Folder"		=> "Creating Folder",
 		"Sorry you can..."		=> "Sorry, you can only have 100 files open at a time!",
 		"Opening File"			=> "Opening File",
-		"Enter relative file..."	=> "Enter relative file path (prefixed with /) or remote URL",
+		"Enter relative file..."	=> "Enter relative file path (prefixed with /) or remote URL\\nYou can enter \\n'/path/file:123' or \\n'/path/file(123)' or \\n'/path/file.ext line 123' \\nto go directly to particular line",
 		"Getting"			=> "Getting",
+		"Saving"			=> "Saving:",
 		"Please enter the..."		=> "Please enter the new name for",
 		"Renaming to"			=> "Renaming to",
 		"Moving to"			=> "Moving to",
@@ -267,6 +325,7 @@ $text = array(
 		"replace all"			=> "replace all",
 		"file"				=> "file",
 		"Replacing text in"		=> "Replacing text in",
+		"Sorry there was..."		=> "Sorry, there was an error with your request.\\n\\nPlease check your dev tools console for more info.",
 		"Cancelled tasks"		=> "Cancelled tasks",
 		"Open previous files"		=> "Open previous files?",
 		"Please enter your..."		=> "Please enter your GitHub token (either personal access token or client/secret pair token). See tooltip next to Github Auth Token on Help > Settings screen for more info",
@@ -276,8 +335,7 @@ $text = array(
 		"Error cannot find..."		=> "Error: cannot find/access the error file paths",
 		"No new errors..."		=> "No new errors found",
 		"You have made..."		=> "You have made changes. Are you sure you want to close without saving?",
-		"Close all tabs"		=> "Close all tabs?",
-		"results"			=> "results"
+		"Close all tabs"		=> "Close all tabs?"
 	),
 
 	"login" =>
@@ -286,6 +344,7 @@ $text = array(
 		"login"				=> "login",
 		"To disable registration..."	=> "To disable registration mode, open the settings menu or open lib/config___settings.php and change enableRegistration to false then reload this page",
 		"Registration mode enabled"	=> "Registration mode enabled",
+		"disable further registrations"	=> "disable further registrations",
 		"auto-check for updates"	=> "auto-check for updates",
 		"To put into..."		=> "To put into multi-user mode, open the settings menu or open lib/config___settings.php and change multiUser to true then reload this page",
 		"multi-user"			=> "multi-user"
@@ -371,7 +430,15 @@ $text = array(
 		"codemirror dir"		=> "codemirror dir",
 		"codemirror version"		=> "codemirror version",
 		"file manager root"		=> "file manager root",
-		"Free to use..."		=> "Free to use it for your own purposes, commercial or not, just let me know of any cool uses or customisations. :)<br><br>No warranty or liability accepted for anything, all responsibility of use is your own.<br><br>A lot of fantastic people and companies have helped build ICEcoder and there is too many to thank here. Please see the full list at",
+		"backups"			=> "backups",
+		"keep version control..."	=> "keep version control backups for",
+		"day"				=> "day",
+		"days"				=> "days",
+		"of backups stored..."		=> "of backups stored currently",
+		"deleting actually moves..."	=> "deleting actually moves to ICEcoder's tmp dir",
+		"local/server items..."		=> "local/server items only",
+		"Get in contact..."		=> "Get in contact by...",
+		"You may use..."		=> "You may use ICEcoder for your own purposes, commercial or not, just let us know of any cool uses or customisations. :)<br><br>No warranty or liability accepted for anything, all responsibility of use is your own.",
 		"functionality"			=> "functionality",
 		"check for updates..."		=> "check for updates on load",
 		"auto open last..."		=> "auto open last files on login",
@@ -389,18 +456,27 @@ $text = array(
 		"banned files/folders"		=> "banned files/folders",
 		"banned paths"			=> "banned paths",
 		"ip addresses"			=> "ip addresses",
+		"auto-logout after"		=> "auto-logout after",
+		"mins of inactivity..."		=> "mins of inactivity if no unsaved files",
 		"Slash prefixed comma..."	=> "Slash prefixed, comma delimited",
 		"Comma delimited"		=> "Comma delimited",
 		"style"				=> "style",
 		"theme"				=> "theme",
 		"line wrapping"			=> "line wrapping",
+		"line numbers"			=> "line numbers",
 		"indent type"			=> "indent type",
 		"indent size"			=> "indent size",
+		"match brackets"		=> "match brackets",
+		"show trailing space"		=> "show trailing space",
 		"font size"			=> "font size",
+		"auto indent"			=> "auto indent",
+		"auto close tags"		=> "auto close tags",
+		"auto close brackets"		=> "auto close brackets",
 		"layout"			=> "layout",
 		"plugin panel aligned"		=> "plugin panel aligned",
 		"file manager"			=> "file manager",
 		"root"				=> "root",
+		"Set 0 to..."			=> "Set 0 to disable",
 		"Slash prefixed"		=> "Slash prefixed",
 		"bug reporting"			=> "bug reporting",
 		"check in files"		=> "check in files",
@@ -430,7 +506,18 @@ $text = array(
 	"updater" =>
 	array(
 		"Update appears to..."		=> "Update appears to be successful"
+	),
+    
+	"find-in-files" =>
+	array(
+		"Enter path to search in" => "Enter path to search in",
+		"Enter semicolon-separated masks of files to look at (e.g. *.php;*.html;*.js)" => "Enter semicolon-separated masks of files to look at (e.g. *.php;*.html;*.js)",
+		"Type of text" => "Type of text",
+		"Fixed text" => "Fixed text",
+		"Regular expression" => "Regular expression",
+		"Case sensitive" => "Case sensitive",
+		"Yes" => "Yes",
+		"No" => "No",
+		"Search" => "Search",
 	)
-
 );
-?>

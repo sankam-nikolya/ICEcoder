@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // French language translation
 // par: @krisxoofoo (GitHub)
 //  @kris_fr Twitter)
@@ -48,6 +48,7 @@ dans lib/config__settings.php",
 		"Your version is"		=> "Votre version est la",
 		"Update now"			=> "Mettre &agrave; jour maintenant",
 		"You have some..."		=> "Vous avez quelques changements non sauvegard&eacute;s",
+		"Are you sure you want to close?" => "Are you sure you want to close?",
 		"working"				=> "en progression",
 		"Color picker"			=> "S&eacute;lecteur de couleur",
 		"New File"			=> "Nouveau fichier",
@@ -242,6 +243,10 @@ dans lib/config__settings.php",
 	"ice-coder" =>
 	array(
 		"No text selected..."		=> "Aucun texte s&eacute;lectionn&eacute; pour la recherche sur",
+		"all files"			=> "tous les fichiers",
+		"all filenames"			=> "tous les noms de fichiers",
+		"selected files"		=> "fichiers s&eacute;lectionn&eacute;s",
+		"selected filenames"		=> "les nomes de fichiers s&eacute;lectionn&eacute;s",
 		"Creating Folder"		=> "r&eacute;ation de dossier",
 		"Sorry you can..."		=> "D&eacute;sol&eacute;, vous ne pouvez pas avoir  plus de 100 fichiers ouverts en m&ecirc;me temps !",
 		"Opening File"			=> "Ouverture de fichier",
@@ -254,6 +259,11 @@ dans lib/config__settings.php",
 		"Pasting File"			=> "Collage fichier",
 		"Sorry cannot paste..."	=> "D&eacute;sol&eacute;, il n&apos;est pas possible de coller une racine",
 		"Nothing to paste..."		=> "Rien &agrave; coller, copiez un fichier/dossier en premier !",
+		"and"				=> "et",
+		"this document"			=> "ce document",
+		"replace"			=> "remplacer",
+		"replace all"			=> "tout remplacer",
+		"file"				=> "fichier",
 		"Replacing text in"		=> "Remplacement  de texte dans",
 		"Cancelled tasks"		=> "Tâches annul&eacute;s",
 		"Open previous files"	=> "Ouvrir les fichiers pr&eacute;c&eacute;dents ?",
@@ -264,7 +274,8 @@ dans lib/config__settings.php",
 		"Error cannot find..."		=> "Erreur : ne peut pas trouver / acc&eacute;der aux chemins des fichiers d&apos;erreur",
 		"No new errors..."		=> "Aucune nouvelle erreur trouv&eacute;e",
 		"You have made..."		=> "Vous avez r&eacute;alis&eacute; des modifications. Etes vous sûr(e) de d&eacute;sirer quitter sans sauvegarder ?",
-		"Close all tabs"		=> "Fermer tous les onglets?"
+		"Close all tabs"		=> "Fermer tous les onglets?",
+		"results"			=> "r&eacute;sultats"
 	),
 
 	"login" =>
@@ -368,7 +379,7 @@ dans lib/config__settings.php",
 		"visible tabs"			=> "onglets visibles",
 		"locked nav"			=> "navigation v&eacute;rouill&eacute;e",
 		"tag wrapper command"	=> "commande de tag",
-		"auto-complete on"		=> "auto-complétion sur",
+		"auto-complete on"		=> "auto-compl&eacute;tion sur",
 		"security"				=> "s&eacute;curit&eacute;",
 		"new password"		=> "nouveau mot de passe",
 		"8 chars min"			=> "8 caract&egrave;res minimum",
@@ -384,6 +395,7 @@ dans lib/config__settings.php",
 		"indent type"			=> "indent type",
 		"indent size"			=> "indent size",
 		"font size"			=> "font size",
+		"auto indent"			=> "auto indent",
 		"layout"				=> "disposition",
 		"plugin panel aligned"	=> "panneau des plugins align&eacute;",
 		"file manager"			=> "gestionnaire de fichiers",
@@ -420,4 +432,3 @@ dans lib/config__settings.php",
 	)
 
 );
-?>

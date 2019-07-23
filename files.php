@@ -8,21 +8,25 @@ $isGitHubRepoDir = in_array($ICEcoder["root"],$ICEcoder['githubLocalPaths']);
 ?>
 <!DOCTYPE html>
 
-<html onMouseDown="top.ICEcoder.mouseDown=true; top.ICEcoder.boxSelect(event,'down')" onMouseUp="top.ICEcoder.mouseDown=false; top.ICEcoder.boxSelect(event,'up'); if (!top.ICEcoder.overCloseLink) {top.ICEcoder.tabDragEnd()}" onMouseMove="if(top.ICEcoder) {top.ICEcoder.getMouseXY(event,'files');top.ICEcoder.canResizeFilesW(); top.ICEcoder.boxSelect(event,'drag')}" onDrop="if(top.ICEcoder) {top.ICEcoder.getMouseXY(event,'files')}" onContextMenu="top.ICEcoder.selectFileFolder(event); return top.ICEcoder.showMenu(event)" onClick="if (!top.ICEcoder.fmDraggedBox) {top.ICEcoder.selectFileFolder(event)} else {top.ICEcoder.fmDraggedBox = false}" onDragStart="top.ICEcoder.selectFileFolder(event);" onDragOver="event.preventDefault();event.stopPropagation()">
+<html onMouseDown="top.ICEcoder.mouseDown=true; top.ICEcoder.resetAutoLogoutTimer(); top.ICEcoder.boxSelect(event,'down')" onMouseUp="top.ICEcoder.mouseDown=false; top.ICEcoder.resetAutoLogoutTimer(); top.ICEcoder.mouseDownInCM=false; top.ICEcoder.boxSelect(event,'up'); if (!top.ICEcoder.overCloseLink) {top.ICEcoder.tabDragEnd()}" onMouseMove="if(top.ICEcoder) {top.ICEcoder.getMouseXY(event,'files'); top.ICEcoder.resetAutoLogoutTimer(); top.ICEcoder.canResizeFilesW(); top.ICEcoder.boxSelect(event,'drag')}" onDrop="if(top.ICEcoder) {top.ICEcoder.getMouseXY(event,'files')}" onContextMenu="top.ICEcoder.selectFileFolder(event); return top.ICEcoder.showMenu(event)" onClick="if (!top.ICEcoder.fmDraggedBox) {top.ICEcoder.selectFileFolder(event)} else {top.ICEcoder.fmDraggedBox = false}" onDragStart="top.ICEcoder.selectFileFolder(event);" onDragOver="event.preventDefault();event.stopPropagation()">
 <head>
 <title>ICEcoder v <?php echo $ICEcoder["versionNo"];?> file manager</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" type="text/css" href="lib/files.css">
-<link rel="stylesheet" type="text/css" href="lib/file-types.css">
-<link rel="stylesheet" type="text/css" href="lib/file-type-icons.css">
-<script src="lib/ice-coder<?php if (!$ICEcoder['devMode']) {echo '.min';};?>.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="lib/files.css?microtime=<?php echo microtime(true);?>">
+<link rel="stylesheet" type="text/css" href="lib/file-types.css?microtime=<?php echo microtime(true);?>">
+<link rel="stylesheet" type="text/css" href="lib/file-type-icons.css?microtime=<?php echo microtime(true);?>">
+<script src="lib/ice-coder<?php if (!$ICEcoder['devMode']) {echo '.min';}; echo ".js?microtime=".microtime(true);?>" type="text/javascript"></script>
+<!--Updated via settings so must remain 4th stylesheet//-->
+<style>
+    ul.fileManager li a span { font-size:  <?php echo $ICEcoder["fontSize"];?>; }
+</style>
 </head>
 
 <body onFocus="top.ICEcoder.files.style.background='#444'" onBlur="top.ICEcoder.files.style.background='#383838'" onload="top.ICEcoder.showHideGithubNav(top.ICEcoder.githubDiff ? 'show' : 'hide')" onDblClick="top.ICEcoder.openFile()" onKeyDown="return top.ICEcoder.interceptKeys('files', event);" onKeyUp="top.ICEcoder.resetKeys(event);" onBlur="parent.ICEcoder.resetKeys(event);">
 
 <div title="<?php echo $t['Lock'];?>" onClick="top.ICEcoder.lockUnlockNav()" id="fmLock" class="lock"></div>
 <div title="<?php echo $t['Refresh'];?>" onClick="top.ICEcoder.refreshFileManager()" class="refresh"></div>
-<div title="Plugins" onClick="top.ICEcoder.showHidePlugins(top.get('plugins').style.width != '55px' ? 'show' : 'hide')" class="plugins"></div>
+<div title="<?php echo $t['Plugins'];?>" onClick="top.ICEcoder.showHidePlugins(top.get('plugins').style.width != '55px' ? 'show' : 'hide')" class="plugins"></div>
 <?php
 $_SESSION['githubDiff'] = false;
 if ($isGitHubRepoDir) {
@@ -51,6 +55,8 @@ $permColors = $thisPermVal == 777 ? 'background: #800; color: #eee' : 'color: #8
 <iframe name="testControl" style="display: none"></iframe>
 
 <iframe name="processControl" style="display: none"></iframe>
+
+<iframe name="pingActive" style="display: none"></iframe>
 
 <div class="fmDragBox" id="fmDragBox"></div>
 

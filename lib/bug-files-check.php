@@ -5,9 +5,9 @@ include_once("settings-common.php");
 $text = $_SESSION['text'];
 $t = $text['bug-files-check'];
 
-$files		= explode(",",str_replace("|","/",$_GET['files']));
-$filesSizesSeen	= explode(",",$_GET['filesSizesSeen']);
-$maxLines	= $_GET['maxLines'];
+$files		= explode(",",str_replace("|","/",xssClean($_GET['files'],"html")));
+$filesSizesSeen	= explode(",",xssClean($_GET['filesSizesSeen'],"html"));
+$maxLines	= xssClean($_GET['maxLines'],"html");
 
 $result = "ok";
 
@@ -15,7 +15,7 @@ for ($i=0; $i<count($files); $i++) {
 	// Work out the real path for a file
 	$files[$i] = realpath($_SERVER['DOCUMENT_ROOT'].$files[$i]);
 	// If we can't find that file or it doesn't start with the doc root, it's an error
-	if (!file_exists($files[$i]) || strpos($files[$i],$_SERVER['DOCUMENT_ROOT']) !== 0) {
+	if (!file_exists($files[$i]) || strpos(str_replace("\\","/",$files[$i]),$_SERVER['DOCUMENT_ROOT']) !== 0) {
 		$result = "error";
 	} else {
 		$filesSizesSeen[$i] = filesize($files[$i]);
@@ -28,7 +28,7 @@ if ($result != "error") {
 
 	for ($i=0; $i<count($files); $i++) {
 		// If we have set a filesize value previously and it's different to now, there's new bugs
-		$fileSizesSeenArray = explode(",",$_GET['filesSizesSeen']);
+		$fileSizesSeenArray = explode(",",xssClean($_GET['filesSizesSeen'],"html"));
 		if ($fileSizesSeenArray[$i]!="null" && $fileSizesSeenArray[$i] != $filesSizesSeen[$i]) {
 			$result = "bugs";
 			$filesWithNewBugs++;
@@ -112,4 +112,3 @@ include("../processes/on-bug-check.php");
 // Finally, display our status in JSON format as the XHR response text
 echo json_encode($status);
 
-?>

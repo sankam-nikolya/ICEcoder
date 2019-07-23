@@ -23,7 +23,7 @@ if (!$demoMode && isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && isset
 		echo '<!DOCTYPE html>
 			<html>
 			<head>
-			<script src="github.js"></script>
+			<script src="github.js?microtime=<?php echo microtime(true);?>"></script>
 			</body>
 			<script>
 			top.ICEcoder.githubAuthTokenSet = true;
@@ -47,14 +47,14 @@ if (!$demoMode && isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && isset
 		echo '<!DOCTYPE html>
 			<html>
 			<head>
-			<script src="github.js"></script>
-			<script src="underscore-min.js"></script>
+			<script src="github.js?microtime=<?php echo microtime(true);?>"></script>
+			<script src="underscore-min.js?microtime=<?php echo microtime(true);?>"></script>
 			</body>
 			<script>
 			// Start our github object, establish this repo & file path
 			var github = new Github({token: "'.$_SESSION['githubAuthToken'].'", auth: "oauth"});
-			var thisRepo = "'.$_GET['repo'].'";
-			var thisFilePath = "'.$_GET['filePath'].'";
+			var thisRepo = "'.xssClean($_GET['repo'],"html").'";
+			var thisFilePath = "'.xssClean($_GET['filePath'],"html").'";
 
 			// Start our repo and read the data in, then update diff pane with that
 			var repo = github.getRepo(thisRepo.split("|")[0], thisRepo.split("|")[1]);
@@ -88,55 +88,51 @@ if (!$demoMode && isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && isset
 			$zipURL = $iceGithubRemotePaths[$pathPos].'/zipball/master';
 	    		$zipFile = "../tmp/".basename($zipURL);
 
-			if (ini_get('allow_url_fopen')) {
-				$fileData = file_get_contents($zipURL, false, $context);
-			} elseif (function_exists('curl_init')) {
-    				$client = curl_init($zipURL);
-				curl_setopt($client, CURLOPT_SSL_VERIFYPEER, false);
-		    		curl_setopt($client, CURLOPT_RETURNTRANSFER, 1);  //fixed this line
-				$fileData = curl_exec($client);
-			}
-			file_put_contents($zipFile, $fileData);
+			$fileData = getData($zipURL,'curl');
+			if (count($fileData) > 0) {
+				file_put_contents($zipFile, $fileData);
 
-			// Now unpack the zip
-			$zip = new ZipArchive;
-			$zip->open($zipFile);
+				// Now unpack the zip
+				$zip = new ZipArchive;
+				$zip->open($zipFile);
 
-			// Create all files & dirs, in 1kb chunks
-			for($i=0; $i<$zip->numFiles; $i++) {
+				// Create all files & dirs, in 1kb chunks
+				for($i=0; $i<$zip->numFiles; $i++) {
 
-				$name = $zip->getNameIndex($i);
-				if ($i==0) {
-					$dirName = $name;
-				} else {
-					$tgtName = str_replace($dirName,"",$name);
-					// Determine output filename
-					$file = $target.$tgtName;
+					$name = $zip->getNameIndex($i);
+					if ($i==0) {
+						$dirName = $name;
+					} else {
+						$tgtName = str_replace($dirName,"",$name);
+						// Determine output filename
+						$file = $target.$tgtName;
 
-					// Create the directories if necessary
-					$dir = dirname($file);
-					if (!is_dir($dir)) mkdir($dir, 0777, true);
+						// Create the directories if necessary
+						$dir = dirname($file);
+						if (!is_dir($dir)) mkdir($dir, 0777, true);
 
-					// Read from zip and write to disk
-					$fpr = $zip->getStream($name);
-					if (!is_dir($file)) {
-						$fpw = fopen($file, 'w');
-						while ($data = fread($fpr, 1024)) {
-							fwrite($fpw, $data);
+						// Read from zip and write to disk
+						$fpr = $zip->getStream($name);
+						if (!is_dir($file)) {
+							$fpw = fopen($file, 'w');
+							while ($data = fread($fpr, 1024)) {
+								fwrite($fpw, $data);
+							}
+							fclose($fpw);
 						}
-						fclose($fpw);
+						fclose($fpr);
 					}
-					fclose($fpr);
 				}
+				$zip->close();
+
+				// Remove the tmp zip file
+				unlink($zipFile);
+
+				// Refresh the file manager
+				echo "<script>top.ICEcoder.refreshFileManager();</script>";
+			} else {
+				echo "<script>top.ICEcoder.message('Sorry, unable to get plugin data. Please make sure you have either curl or fopen available on your server.');</script>";
 			}
-			$zip->close();
-
-			// Remove the tmp zip file
-			unlink($zipFile);
-
-			// Refresh the file manager
-			echo "<script>top.ICEcoder.refreshFileManager();</script>";
-
 		}
 
 	}
@@ -153,8 +149,8 @@ if (!$demoMode && isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && isset
 		<title>ICEcoder <?php echo $ICEcoder["versionNo"];?> GitHub commit files</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="robots" content="noindex, nofollow">
-		<script src="github.js"></script>
-		<link rel="stylesheet" type="text/css" href="github.css">
+		<script src="github.js?microtime=<?php echo microtime(true);?>"></script>
+		<link rel="stylesheet" type="text/css" href="github.css?microtime=<?php echo microtime(true);?>">
 		</head>
 
 		<body class="githubAction">
@@ -189,10 +185,10 @@ if (!$demoMode && isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && isset
 
 			// Only get the file if it exists and begins with our $docRoot
 			if (file_exists($file) && strpos($file,$docRoot) === 0) {
-				$loadedFile = toUTF8noBOM(file_get_contents($file,false,$context),true);
-				echo '<textarea name="loadedFile'.$i.'" id="loadedFile'.$i.'" style="display: none">'.str_replace("</textarea>","<ICEcoder:/:textarea>",str_replace("&","&amp;",$loadedFile)).'</textarea><br><br>'.PHP_EOL.PHP_EOL;
+				$loadedFile = getData($file);
+				echo '<textarea name="loadedFile'.$i.'" id="loadedFile'.$i.'" style="display: none">'.base64_encode($loadedFile).'</textarea><br><br>'.PHP_EOL.PHP_EOL;
 			} else {
-				die("<script>alert('Sorry, that file doesn\'t appear to exist');</script>");
+				die("<script>top.ICEcoder.message('Sorry, that file doesn\'t appear to exist');</script>");
 			}
 		}
 		?>
@@ -267,7 +263,7 @@ if (!$demoMode && isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && isset
 	?>
 	<script>
 		top.ICEcoder.showHide('hide',top.get('blackMask'));
-		top.ICEcoder.message("Pull actions not yet available. Will be in ICEcoder v4.4");
+		top.ICEcoder.message("Pull actions not yet available. Will be in available soon!");
 	</script>
 	<?php
 	}

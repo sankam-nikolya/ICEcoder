@@ -9,7 +9,7 @@ if (!$demoMode && isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && isset
 	// Get our old paths & user settings
 	$oldLocal = $ICEcoder["githubLocalPaths"];
 	$oldRemote = $ICEcoder["githubRemotePaths"];
-	$settingsContents = file_get_contents($settingsFile,false,$context);
+	$settingsContents = getData($settingsFile);
 
 	// ========
 	// CHOOSING
@@ -52,6 +52,10 @@ if (!$demoMode && isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && isset
 				$fh = fopen($settingsFile, 'w');
 				fwrite($fh, $settingsContents);
 				fclose($fh);
+
+				// Clear any FTP session we may have
+				$_SESSION['ftpSiteRef'] = false;
+
 				// Hide this popup and reload file manager
 				echo "<script>top.ICEcoder.showHide('hide',top.document.getElementById('blackMask'));top.ICEcoder.refreshFileManager();</script>";
 			} else {
@@ -73,7 +77,7 @@ if (!$demoMode && isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && isset
 
 		// Add the new one
 		if ($_POST['githubLocalPathNEW'] != "" && $_POST['githubRemotePathNEW'] != "") {
-			$settingsNew .= '"'.xssClean($_POST['githubLocalPathNEW'],"html").'",';
+			$settingsNew .= '"'.injClean(xssClean($_POST['githubLocalPathNEW'],"html")).'",';
 		}
 
 		// Then set all the old local paths
@@ -89,7 +93,7 @@ if (!$demoMode && isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && isset
 
 		// Add the new one
 		if ($_POST['githubLocalPathNEW'] != "" && $_POST['githubRemotePathNEW'] != "") {
-			$settingsNew .= '"'.xssClean($_POST['githubRemotePathNEW'],"html").'",';
+			$settingsNew .= '"'.injClean(xssClean($_POST['githubRemotePathNEW'],"html")).'",';
 		}
 
 		// Then set all the old remote paths
@@ -114,7 +118,7 @@ if (!$demoMode && isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && isset
 		// Redo the arrays using the form data
 		for ($i=0; $i<count($oldLocal); $i++) {
 			if ($_POST['githubLocalPath'.$i] != "") {
-				$settingsNew .= '"'.xssClean($_POST['githubLocalPath'.$i],"html").'",';
+				$settingsNew .= '"'.injClean(xssClean($_POST['githubLocalPath'.$i],"html")).'",';
 			}
 		}
 		// Rtrim off the last comma
@@ -127,7 +131,7 @@ if (!$demoMode && isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && isset
 		// Redo the arrays using the form data
 		for ($i=0; $i<count($oldRemote); $i++) {
 			if ($_POST['githubRemotePath'.$i] != "") {
-				$settingsNew .= '"'.xssClean($_POST['githubRemotePath'.$i],"html").'",';
+				$settingsNew .= '"'.injClean(xssClean($_POST['githubRemotePath'.$i],"html")).'",';
 			}
 		}
 		// Rtrim off the last comma
@@ -168,7 +172,7 @@ if (!$demoMode && isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && isset
 <title>ICEcoder <?php echo $ICEcoder["versionNo"];?> GitHub manager</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" type="text/css" href="github-manager.css">
+<link rel="stylesheet" type="text/css" href="github-manager.css?microtime=<?php echo microtime(true);?>">
 </head>
 
 <body class="githubManager">
@@ -187,8 +191,8 @@ if (!$demoMode && isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && isset
 		<form id="githubUpdateForm" action="github-manager.php?action=update" method="POST">
 			<table>
 			<tr>
-			<td style="padding-left: 5px"><?php echo $t['Local path'];?></td>
-			<td style="padding-left: 5px"><?php echo $t['Remote GitHub path'];?></td>
+			<td style="padding-left: 5px"><?php echo $t['Local path'];?> <span class="info" title="<?php echo $t['Slash prefixed'];?>">[?]</span></td>
+			<td style="padding-left: 5px"><?php echo $t['Remote GitHub path'];?> <span class="info" title="<?php echo $t['Absolute URL beginning...'];?>">[?]</span></td>
 			</tr>
 			<?php
 			for ($i=0; $i<count($pathsLocal); $i++) {
@@ -217,8 +221,8 @@ if (!$demoMode && isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && isset
 		<form id="githubAddForm" action="github-manager.php?action=add" method="POST">
 			<table>
 			<tr>
-			<td style="padding-left: 5px"><?php echo $t['Local path'];?></td>
-			<td style="padding-left: 5px"><?php echo $t['Remote GitHub path'];?></td>
+			<td style="padding-left: 5px"><?php echo $t['Local path'];?> <span class="info" title="<?php echo $t['Slash prefixed'];?>">[?]</span></td>
+			<td style="padding-left: 5px"><?php echo $t['Remote GitHub path'];?> <span class="info" title="<?php echo $t['Absolute URL beginning...'];?>">[?]</span></td>
 			</tr>
 			<tr>
 			<td style="padding: 0 10px 8px 0"><input type="text" name="githubLocalPathNEW" value="" style="width: 250px"></td>
